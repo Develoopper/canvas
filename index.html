@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <canvas id="myCanvas" width="500" height="500"></canvas>
+</body>
+
+<script>
+  window.onload = canvas;
+
+  
+  function canvas() {
+    var myCanvas = document.getElementById("myCanvas");
+    var ctx = myCanvas.getContext("2d");
+    var r = 5;
+    var x = -r;
+    var y = 250;
+
+    let up = false;
+    let xOnUp = 0;
+    let xOnDown = 0;
+
+    document.onkeydown = function(event) {
+      if (event.keyCode == 32)
+        up = true;
+        xOnUp = x;
+      }
+      document.onkeyup = function(event) {
+        if (event.keyCode == 32)
+        up = false;
+        xOnDown = x;
+      }
+
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    setInterval(function () {
+      ctx.beginPath();
+      ctx.fillStyle = "red";
+      x += 10;
+      if (up) {
+        let xForGrow = x - xOnUp; 
+        y -= (2 * xForGrow * xForGrow + 4 * xForGrow - 5) / 200;
+      } else if (y < 250) {
+        let xForGrow = x - xOnDown; 
+        y += (2 * xForGrow * xForGrow + 4 * xForGrow - 5) / 200;
+      }
+      ctx.arc(x, y, r, 0, 2 * Math.PI);
+      ctx.fill();
+
+      if (x >= ctx.canvas.width + r)
+        x = -r;
+    }, 100);
+  }
+</script>
+
+</html>
