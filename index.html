@@ -24,18 +24,23 @@
     var y = 250;
 
     let up = false;
-    let xOnUp = 0;
-    let xOnDown = 0;
+    let xOnUp = 0; let xOnDown = 0;
+    let xSinceUp = 0; let xSinceDown = 0;
+    
+    let yOnup = 0; let yOnDown = 0;
+    let ySinceUp = 0; let ySinceDown = 0;
 
     document.onkeydown = function(event) {
       if (event.keyCode == 32)
         up = true;
         xOnUp = x;
+        yOnUp = y;
       }
       document.onkeyup = function(event) {
         if (event.keyCode == 32)
         up = false;
         xOnDown = x;
+        yOnDown = y;
       }
 
     ctx.fillStyle = "#000";
@@ -45,11 +50,20 @@
       ctx.fillStyle = "red";
       x += 10;
       if (up) {
-        let xForGrow = x - xOnUp; 
-        y -= (2 * xForGrow * xForGrow + 4 * xForGrow - 5) / 200;
+        xSinceUp = x - xOnUp; 
+        ySinceUp = yOnUp - y; 
+
+        if (ySinceUp > xSinceUp)
+          y = (1 / 100) * xSinceUp * xSinceUp;
+        else
+          y -= 10;
       } else if (y < 250) {
-        let xForGrow = x - xOnDown; 
-        y += (2 * xForGrow * xForGrow + 4 * xForGrow - 5) / 200;
+        xSinceDown = x - xOnDown;
+        if (y < xSinceDown)
+          y = (1 / 100) * xSinceDown * xSinceDown;
+        else
+          y += 10; 
+        // y += (1 / 1000) * xSinceUp * xSinceUp;
       }
       ctx.arc(x, y, r, 0, 2 * Math.PI);
       ctx.fill();
