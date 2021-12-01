@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <canvas id="myCanvas" width="500" height="500"></canvas>
+  <div id='volume'>0</div>
+</body>
+<script src="./microVolume.js"></script>
+
+<script>
+  window.onload = canvas;
+  
+  function canvas() {
+    var myCanvas = document.getElementById("myCanvas");
+    var ctx = myCanvas.getContext("2d");
+    var r = 5;
+    var y = 250;
+    const points = [{ x: 250, y: 250 }];
+    let up = false;
+
+    let headOnUp = 0; let headOnDown = 0;
+    let xSinceUp = 0; let xSinceDown = 0;
+
+    document.onkeydown = event => {
+      if (event.keyCode === 32) {
+        up = true;
+        headOnUp = points[0];
+      }
+    }
+
+    document.onkeyup = event => {
+      if (event.keyCode === 32) {
+        up = false;
+        headOnDown = points[0];
+      }
+    }
+    
+    setInterval(function () {
+      // clear canvas
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      
+      // slide points
+      for (const point of points)
+        point.x -= 10;
+
+      xSinceUp = 250 - headOnUp.x; 
+      console.log(headOnUp.x);
+      xSinceDown = 250 - headOnDown.x; 
+      if (up) {
+        // if (-y <= xSinceUp) {
+          y = 250 - xSinceUp;
+          // console.log(xSinceUp);
+        // } else {
+        //   console.log(99999999);
+        //   y -= (xSinceUp * xSinceUp) / 100;
+        // }
+      } else if (y < 250) {
+        // y += (xSinceDown * xSinceDown) / 100;
+        y += 10;
+      }
+      // create new point in the center
+      points.unshift({ x: 250, y });
+        
+      // draw points
+      for (const point of points) {
+        ctx.beginPath();
+        ctx.fillStyle = point.x === headOnUp.x ? 'yellow' : 'red';
+        ctx.arc(point.x, point.y, r, 0, 2 * Math.PI);
+        ctx.fill();  
+      }
+      
+      if (points[points.length - 1].x <= -r)
+        points.pop()
+    }, 200);
+  }
+</script>
+
+</html>
